@@ -106,6 +106,7 @@
             margin: 0 auto;
         }
 
+        /* Ganesha & Mantra Video */
         .ganesha-container {
             position: relative;
             width: min(80vw, 400px);
@@ -131,32 +132,13 @@
 
         .is-open .ganesha-custom-img { opacity: 1; }
 
-        /* Existing mantra text rendering kept for reference */
-        /*
-        #mantra-svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            transform: rotate(-95deg);
-        }
-
-        .mantra-path-text {
-            font-family: "Noto Serif Devanagari", "Kohinoor Devanagari", "Devanagari Sangam MN", serif;
-            font-size: 26px;
-            font-weight: 700;
-            fill: var(--gold);
-            letter-spacing: 0.0px;
-        }
-        */
-
         .mantra-video {
             position: absolute;
             top: 50%;
+            left: 50%;
             width: 140%;
             height: 140%;
-            transform: translate(0%, -43%);
+            transform: translate(-50%, -43%);
             object-fit: contain;
             pointer-events: none;
             z-index: 8;
@@ -165,10 +147,9 @@
             background: transparent;
         }
 
-        .is-open .mantra-video {
-            opacity: 1;
-        }
+        .is-open .mantra-video { opacity: 1; }
 
+        /* Welcome Box */
         .welcome-box {
             background-color: var(--rings-blend-cream);
             padding: 80px 40px;
@@ -215,6 +196,7 @@
             margin: 0;
         }
 
+        /* Itinerary */
         .events-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -243,7 +225,7 @@
         
         .maps-btn {
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 15px;
             padding: 10px 18px;
             font-size: 0.8rem;
             color: var(--gold);
@@ -262,6 +244,7 @@
             color: white;
         }
 
+        /* Baraat Slider */
         .baraat-slider-section {
             width: 100%;
             max-width: 1200px;
@@ -323,6 +306,7 @@
             100% { left: 85%; opacity: 0; }
         }
 
+        /* Buttons & Banners */
         .calendar-btn {
             background: var(--pastel-pink);
             color: white;
@@ -335,8 +319,10 @@
             text-decoration: none;
             display: inline-block;
             margin-top: 30px;
-            animation: pulse-pink 2s infinite;
+            transition: transform 0.3s ease;
         }
+        
+        .calendar-btn:hover { transform: scale(1.05); }
 
         .full-width-banner {
             width: 100vw;
@@ -375,63 +361,32 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .is-open #music-control { display: flex; }
 
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
             .events-grid { grid-template-columns: 1fr; }
             .landmark { height: 120px; }
             .landmark-group.bibi { left: 0; }
             .landmark-group.charminar { right: 0; }
-            .city-label { font-size: 0.7rem; }
-
+            
             .welcome-box {
-                box-sizing: border-box;
                 width: calc(100vw - 32px);
-                max-width: 500px;
-                margin-left: auto;
-                margin-right: auto;
-                padding: 36px 18px;
-                border-radius: 28px;
+                padding: 40px 20px;
+                border-radius: 30px;
             }
 
-            .welcome-title {
-                font-size: 2rem;
-                margin-bottom: 14px;
-            }
-
-            .welcome-text-en {
-                font-size: 1.02rem;
-                line-height: 1.65;
-            }
-
-            .welcome-rings {
-                width: 100px;
-                margin: 20px 0;
-            }
-
-            .welcome-text-hi {
-                font-size: 0.96rem;
-                line-height: 1.75;
-            }
-
-            /*
-            .mantra-path-text {
-                font-size: 26px;
-                letter-spacing: 0.0px;
-                font-weight: 700;
-            }
-            */
+            .welcome-title { font-size: 2rem; }
+            .welcome-text-en { font-size: 1.05rem; }
+            .welcome-text-hi { font-size: 1rem; }
 
             .baraat-slider-section {
                 height: 240px;
-                margin: 40px 0 20px 0;
+                margin: 40px 0;
                 overflow: hidden;
-            }
-
-            .landmark-group {
-                bottom: 35px;
             }
 
             .baraat-group {
@@ -439,26 +394,14 @@
                 animation: travel-mobile 12s linear infinite;
             }
 
-            .baraat-img {
-                width: 105px;
-            }
+            .baraat-img { width: 110px; }
         }
 
         @keyframes travel-mobile {
-            0% {
-                left: 12%;
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                left: 62%;
-                opacity: 0;
-            }
+            0% { left: 5%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: 75%; opacity: 0; }
         }
     </style>
 </head>
@@ -479,21 +422,9 @@
         <section>
             <div class="ganesha-container">
                 <img class="ganesha-custom-img" alt="Ganesha">
-
                 <video id="mantra-video" class="mantra-video" muted playsinline loop>
                     <source src="./assets/mantra-video.mp4" type="video/mp4">
                 </video>
-
-                <!-- Existing mantra text rendering kept for reference only
-                <svg id="mantra-svg" viewBox="0 0 400 400">
-                    <defs>
-                        <path id="circlePath" d="M 200, 200 m -126, 0 a 126, 126 0 1, 1 252, 0 a 126, 126 0 1, 1 -252, 0" />
-                    </defs>
-                    <text class="mantra-path-text">
-                        <textPath id="textPathContent" href="#circlePath" startOffset="0%"></textPath>
-                    </text>
-                </svg>
-                -->
             </div>
         </section>
 
@@ -542,35 +473,11 @@
                 <div class="events-grid">
                     <div class="event-card">
                         <div>
-                            <div style="color: var(--gold); font-size: 0.9rem;">6th May | 10:00 AM</div>
-                            <div class="event-name">The Carnival</div>
-                            <div style="font-size: 0.85rem; color: #666;">📍 Lakshmi Vihar Phase-1, Hyderabad</div>
-                        </div>
-                        <a href="https://www.google.com/maps/place/Lakshmi+Vihar+Phase+1,+Serilingampalle+(M),+Telangana+500019,+India/@17.4789232,78.3043159,18z/data=!3m1!4b1!4m6!3m5!1s0x3bcb92c5a38518c7:0x15c581ab6b469bdf!8m2!3d17.4790544!4d78.3062288!16s%2Fg%2F1q6620cq_?entry=ttu&g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="maps-btn">View Maps</a>
-                    </div>
-                    <div class="event-card">
-                        <div>
-                            <div style="color: var(--gold); font-size: 0.9rem;">6th May | 5:00 PM</div>
-                            <div class="event-name">Engagement & Sangeet</div>
-                            <div style="font-size: 0.85rem; color: #666;">📍 Sri Convention Hall, Hyderabad</div>
-                        </div>
-                        <a href="https://www.google.com/maps/place/Sri+Convention+Hall/@17.5111449,78.2961623,17z/data=!4m17!1m10!3m9!1s0x3bcb8d66ab4e988f:0xda59fdc59515bdc4!2sSri+Convention+Hall!8m2!3d17.5111449!4d78.2961623!10e5!14m1!1BCgIgARICGAI!16s%2Fg%2F11h565rxxc!3m5!1s0x3bcb8d66ab4e988f:0xda59fdc59515bdc4!8m2!3d17.5111449!4d78.2961623!16s%2Fg%2F11h565rxxc!5m1!1e1!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDMxOC4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="maps-btn">View on Maps</a>
-                    </div>
-                    <div class="event-card">
-                        <div>
                             <div style="color: var(--gold); font-size: 0.9rem;">7th May | 10:01 AM</div>
                             <div class="event-name">The Wedding</div>
                             <div style="font-size: 0.85rem; color: #666;">📍 Sri Convention Hall, Hyderabad</div>
                         </div>
-                       <a href="https://www.google.com/maps/place/Sri+Convention+Hall/@17.5111449,78.2961623,17z/data=!4m17!1m10!3m9!1s0x3bcb8d66ab4e988f:0xda59fdc59515bdc4!2sSri+Convention+Hall!8m2!3d17.5111449!4d78.2961623!10e5!14m1!1BCgIgARICGAI!16s%2Fg%2F11h565rxxc!3m5!1s0x3bcb8d66ab4e988f:0xda59fdc59515bdc4!8m2!3d17.5111449!4d78.2961623!16s%2Fg%2F11h565rxxc!5m1!1e1!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDMxOC4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="maps-btn">View on Maps</a>
-                    </div>
-                    <div class="event-card">
-                        <div>
-                            <div style="color: var(--gold); font-size: 0.9rem;">9th May | 6:30 PM</div>
-                            <div class="event-name">The Reception</div>
-                            <div style="font-size: 0.85rem; color: #666;">📍 Sagar Lawns, Chhatrapati Sambhajinagar</div>
-                        </div>
-                        <a href="https://www.google.com/maps/place/Sagar+Lawns/@19.8737243,75.3689743,17z/data=!3m1!4b1!4m6!3m5!1s0x3bdba2f277ff99c7:0x8818ab1274f65ba9!8m2!3d19.8737243!4d75.3715546!16s%2Fg%2F1vxfymkd?entry=ttu&g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="maps-btn">View on Maps</a>
+                       <a href="https://maps.app.goo.gl/YourActualLink" target="_blank" class="maps-btn">View on Maps</a>
                     </div>
                 </div>
             </div>
@@ -578,7 +485,7 @@
 
         <section>
             <div class="content-wrap">
-                <h2 class="welcome-title">Counting down to the Celebration...</h2>
+                <h2 class="welcome-title">Counting down...</h2>
                 <div id="timer" style="display: flex; justify-content: center; gap: 15px;">
                     <div style="background: white; padding: 20px 10px; border-radius: 12px; min-width: 80px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
                         <span id="days" style="font-size: 2.2rem; color: var(--pastel-pink); font-family: var(--font-serif);">00</span><br><span style="font-size: 10px; text-transform: uppercase; color: var(--gold); font-weight: 600;">Days</span>
@@ -608,7 +515,7 @@
                     </div>
                 </div>
 
-                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Shivani+%26+Arpan&dates=20260506T100000Z/20260509T230000Z" target="_blank" class="calendar-btn">Add to Calendar</a>
+                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Shivani+%26+Arpan&dates=20260507T043000Z/20260507T140000Z" target="_blank" class="calendar-btn">Add to Calendar</a>
             </div>
         </section>
 
@@ -628,29 +535,6 @@
         const audio = document.getElementById('wedding-audio');
         const mantraVideo = document.getElementById('mantra-video');
         let isPlaying = false;
-
-        /*
-        function typeMantra() {
-            const pathContent = document.getElementById('textPathContent');
-            const fullMantra = " ॐ गणेशाय नमः ॐ गणेशाय नमः ॐ गणेशाय नमः ॐ गणेशाय नमः ॐ गणेशाय नमः ";
-
-            pathContent.textContent = "";
-
-            const segmenter = new Intl.Segmenter("hi", { granularity: "grapheme" });
-            const parts = Array.from(segmenter.segment(fullMantra), s => s.segment);
-
-            let i = 0;
-
-            const interval = setInterval(() => {
-                pathContent.textContent += parts[i];
-                i++;
-
-                if (i >= parts.length) {
-                    clearInterval(interval);
-                }
-            }, 90);
-        }
-        */
 
         function openLetter() {
             document.getElementById('page-body').classList.add('is-open');
@@ -676,6 +560,7 @@
             isPlaying = !isPlaying;
         }
 
+        // Confetti Trigger
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -692,9 +577,11 @@
         
         observer.observe(document.getElementById('names-section'));
 
-        const targetDate = new Date("May 06, 2026 10:00:00").getTime();
+        // Countdown Timer Logic
+        const targetDate = new Date("May 07, 2026 10:01:00").getTime();
         setInterval(function() {
-            const d = targetDate - new Date().getTime();
+            const now = new Date().getTime();
+            const d = targetDate - now;
             if (d > 0) {
                 document.getElementById("days").innerText = String(Math.floor(d / 86400000)).padStart(2, '0');
                 document.getElementById("hours").innerText = String(Math.floor((d % 86400000) / 3600000)).padStart(2, '0');
