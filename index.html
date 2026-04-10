@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Shivani & Arpan</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Segoe+UI:wght@300;400;600&family=Noto+Serif+Devanagari:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --pastel-pink: #d8a7b1;    
+            --pastel-blue: #a3b8c8;
+            --gold: #c5a059;
+            --pastel-purple: #b39eb5;
+            --welcome-text: #3a4750; 
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Segoe UI', sans-serif;
+            --font-devanagari: 'Noto Serif Devanagari', serif;
+            --font-garamond: 'EB Garamond', serif;
+            --font-cursive: 'Great Vibes', cursive;
+            --bg-soft: #fdfaf7;
+            --rings-blend-cream: #f4f3f1; 
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            font-family: var(--font-sans);
+            background-color: var(--bg-soft);
+            overflow-x: hidden; 
+        }
+
+        body:not(.is-open) { overflow: hidden; }
+
+        #intro-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('./assets/intro-page.png') no-repeat center center;
+            background-size: cover;
+            z-index: 2000;
+            cursor: pointer;
+            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .is-open #intro-page { transform: translateY(-100%); }
+
+        .floral-side {
+            position: fixed;
+            top: 0;
+            width: 15vw;
+            height: 100vh;
+            background-image: url('./assets/floral-border.png');
+            background-repeat: repeat-y;
+            background-size: contain;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 1.5s ease-in;
+            pointer-events: none;
+        }
+
+        .floral-left {
+            left: 0;
+            background-position: right center;
+            transform: scaleX(-1);
+        }
+
+        .floral-right {
+            right: 0;
+            background-position: right center;
+        }
+
+        .is-open .floral-side { opacity: 0.6; }
+
+        .scroll-container {
+            display: none;
+            position: relative;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .is-open .scroll-container { display: block; }
+
+        section {
+            min-height: 100vh;
+            width: 100%; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .content-wrap {
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            z-index: 15;
+            margin: 0 auto;
+        }
+
+        .ganesha-container {
+            position: relative;
+            width: min(80vw, 400px);
+            height: min(80vw, 400px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ganesha-custom-img {
+            width: 50%;
+            height: 50%;
+            border-radius: 50%;
+            object-fit: cover;
+            content: url('./assets/ganesha_image.jpg');
+            mix-blend-mode: multiply;
+            z-index: 10;
+            transform: translate(0%, 5%);
+            opacity: 0;
+            transition: opacity 1.5s ease 0.5s;
+            position: relative;
+        }
+
+        .is-open .ganesha-custom-img { opacity: 1; }
+
+        /* Existing mantra text rendering kept for reference */
+        /*
+        #mantra-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-95deg);
+        }
+
+        .mantra-path-text {
+            font-family: "Noto Serif Devanagari", "Kohinoor Devanagari", "Devanagari Sangam MN", serif;
+            font-size: 26px;
+            font-weight: 700;
+            fill: var(--gold);
+            letter-spacing: 0.0px;
+        }
+        */
+
+        .mantra-video {
+            position: absolute;
+            top: 50%;
+            width: 140%;
+            height: 140%;
+            transform: translate(0%, -43%);
+            object-fit: contain;
+            pointer-events: none;
+            z-index: 8;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            background: transparent;
+        }
+
+        .is-open .mantra-video {
+            opacity: 1;
+        }
+
+        .welcome-box {
+            background-color: var(--rings-blend-cream);
+            padding: 80px 40px;
+            border-radius: 50% / 35%; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            margin: 0 auto;
+            width: 100%;
+            max-width: 500px; 
+            border: 1px solid rgba(197, 160, 89, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .welcome-title {
+            font-family: var(--font-serif);
+            font-size: 2.8rem;
+            color: var(--pastel-pink);
+            margin-bottom: 20px;
+        }
+
+        .welcome-text-en {
+            font-family: var(--font-garamond);
+            font-size: 1.3rem;
+            color: var(--welcome-text);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .welcome-rings {
+            width: 140px;
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            object-fit: contain;
+            display: block;
+        }
+
+        .welcome-text-hi {
+            font-family: var(--font-devanagari);
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--welcome-text);
+            margin: 0;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .event-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid var(--gold);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .event-name {
+            font-family: var(--font-serif);
+            color: var(--pastel-pink);
+            font-size: 1.4rem;
+            margin: 8px 0;
+        }
+        
+        .maps-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 18px;
+            font-size: 0.8rem;
+            color: var(--gold);
+            border: 1.5px solid var(--gold);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .maps-btn:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+        .baraat-slider-section {
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+            height: 350px;
+            margin: 60px 0;
+            overflow: visible;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .landmark-group {
+            position: absolute;
+            bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .landmark-group.bibi { left: -80px; }
+        .landmark-group.charminar { right: -80px; }
+
+        .landmark {
+            height: 200px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .city-label {
+            font-family: var(--font-serif);
+            font-size: 0.9rem;
+            color: var(--gold);
+            margin-top: 5px;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .baraat-group {
+            position: absolute;
+            bottom: 60px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: travel-desktop 15s linear infinite;
+        }
+
+        .baraat-img {
+            width: 180px;
+            mix-blend-mode: multiply;
+            transform: scaleX(-1);
+        }
+
+        @keyframes travel-desktop {
+            0%   { left: 5%; opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 1; }
+            100% { left: 85%; opacity: 0; }
+        }
+
+        .calendar-btn {
+            background: var(--pastel-pink);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 35px;
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 30px;
+            animation: pulse-pink 2s infinite;
+        }
+
+        .full-width-banner {
+            width: 100vw;
+            background-color: var(--pastel-pink);
+            padding: 100px 0;
+            margin-top: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+        }
+
+        .banner-line {
+            font-family: var(--font-cursive);
+            font-size: 4.5rem;
+            line-height: 1.1;
+        }
+
+        #music-control {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 2100;
+            background: white; 
+            border: 1px solid var(--pastel-pink);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .is-open #music-control { display: flex; }
+
+        @media (max-width: 768px) {
+            .events-grid { grid-template-columns: 1fr; }
+            .landmark { height: 120px; }
+            .landmark-group.bibi { left: 0; }
+            .landmark-group.charminar { right: 0; }
+            .city-label { font-size: 0.7rem; }
+
+            .welcome-box {
+                box-sizing: border-box;
+                width: calc(100vw - 32px);
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+                padding: 36px 18px;
+                border-radius: 28px;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+                margin-bottom: 14px;
+            }
+
+            .welcome-text-en {
+                font-size: 1.02rem;
+                line-height: 1.65;
+            }
+
+            .welcome-rings {
+                width: 100px;
+                margin: 20px 0;
+            }
+
+            .welcome-text-hi {
+                font-size: 0.96rem;
+                line-height: 1.75;
+            }
+
+            /*
+            .mantra-path-text {
+                font-size: 26px;
+                letter-spacing: 0.0px;
+                font-weight: 700;
+            }
+            */
+
+            .baraat-slider-section {
+                height: 240px;
+                margin: 40px 0 20px 0;
+                overflow: hidden;
+            }
+
+            .landmark-group {
+                bottom: 35px;
+            }
+
+            .baraat-group {
+                bottom: 42px;
+                animation: travel-mobile 12s linear infinite;
+            }
+
+            .baraat-img {
+                width: 105px;
+            }
+        }
+
+        @keyframes travel-mobile {
+            0% {
+                left: 12%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: 62%;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body id="page-body">
+
+    <div id="intro-page" onclick="openLetter()"></div>
+    <div id="music-control" onclick="toggleMusic()">♪</div>
+    
+    <audio id="wedding-audio" loop>
+        <source src="./assets/Interstellar_audio.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="floral-side floral-left"></div>
+    <div class="floral-side floral-right"></div>
+
+    <div class="scroll-container">
+        
+        <section>
+            <div class="ganesha-container">
+                <img class="ganesha-custom-img" alt="Ganesha">
+
+                <video id="mantra-video" class="mantra-video" muted playsinline loop>
+                    <source src="./assets/mantra-video.mp4" type="video/mp4">
+                </video>
+
+                <!-- Existing mantra text rendering kept for reference only
+                <svg id="mantra-svg" viewBox="0 0 400 400">
+                    <defs>
+                        <path id="circlePath" d="M 200, 200 m -126, 0 a 126, 126 0 1, 1 252, 0 a 126, 126 0 1, 1 -252, 0" />
+                    </defs>
+                    <text class="mantra-path-text">
+                        <textPath id="textPathContent" href="#circlePath" startOffset="0%"></textPath>
+                    </text>
+                </svg>
+                -->
+            </div>
+        </section>
+
+        <section id="names-section">
+            <div class="content-wrap">
+                <p style="letter-spacing: 8px; font-size: 11px; color: var(--pastel-blue); margin-bottom: 30px;">THE WEDDING OF</p>
+                <div style="font-family: var(--font-serif); font-size: clamp(2.5rem, 8vw, 4rem); color: var(--pastel-pink); text-transform: uppercase; letter-spacing: 6px;">Shivani</div>
+                <div style="font-family: var(--font-garamond); font-size: 1.1rem; color: var(--pastel-purple); font-style: italic;">Daughter of Dr. Suman and Dr. Padmakar Rao Sutrave</div>
+                <span style="font-family: var(--font-serif); font-size: 1.8rem; display: block; margin: 15px 0; font-style: italic; color: var(--pastel-blue);">and</span>
+                <div style="font-family: var(--font-serif); font-size: clamp(2.5rem, 8vw, 4rem); color: var(--pastel-pink); text-transform: uppercase; letter-spacing: 6px;">Arpan</div>
+                <div style="font-family: var(--font-garamond); font-size: 1.1rem; color: var(--pastel-purple); font-style: italic;">Son of Smt. Deepali and Shri Ghanshamji Tapdiya</div>
+                <div style="font-family: var(--font-serif); font-size: 1.6rem; color: var(--pastel-blue); margin-top: 35px; font-style: italic;">07 May 2026</div>
+            </div>
+        </section>
+
+        <section>
+            <div class="content-wrap">
+                <p style="letter-spacing: 2px; font-size: 18px; color: var(--pastel-blue); margin-bottom: 20px; font-family: var(--font-devanagari);">|| मंगल परिणय ||</p>
+                <div style="font-family: var(--font-devanagari); font-size: clamp(2.5rem, 8vw, 4rem); color: var(--pastel-pink); letter-spacing: 1px;">शिवानी</div>
+                <div style="font-family: var(--font-devanagari); font-size: 1.2rem; color: var(--pastel-purple);">सुपुत्री डॉ. सुमन एवं डॉ. पद्माकर राव सुत्रावे</div>
+                <span style="font-family: var(--font-serif); font-size: 1.8rem; display: block; margin: 15px 0; font-style: italic; color: var(--pastel-blue);">संग</span>
+                <div style="font-family: var(--font-devanagari); font-size: clamp(2.5rem, 8vw, 4rem); color: var(--pastel-pink); letter-spacing: 1px;">अर्पण</div>
+                <div style="font-family: var(--font-devanagari); font-size: 1.2rem; color: var(--pastel-purple);">सुपुत्र श्रीमती दीपाली एवं श्री घनश्यामजी तापड़िया</div>
+                <div style="font-family: var(--font-devanagari); font-size: 1.8rem; color: var(--pastel-blue); margin-top: 35px;">०७ मई २०२६</div>
+            </div>
+        </section>
+
+        <section>
+            <div class="content-wrap">
+                <div class="welcome-box">
+                    <h1 class="welcome-title">Welcome!</h1>
+                    <p class="welcome-text-en">
+                        Together with joyful hearts, the Sutrave and Tapdiya families warmly invite you to celebrate the beautiful union of their children, <strong style="color: var(--pastel-pink);">Shivani and Arpan</strong>.
+                    </p>
+                    <img src="./assets/rings_image.jpg" class="welcome-rings" alt="Rings">
+                    <div class="welcome-text-hi">
+                        हर्षित हृदय के साथ, सुत्रावे और तापड़िया परिवार आपको अपने बच्चों, <strong style="color: var(--pastel-pink);">शिवानी और अर्पण</strong> के शुभ विवाह उत्सव में शामिल होने के लिए आमंत्रित करते हैं।
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="content-wrap">
+                <h2 class="welcome-title">The Itinerary</h2>
+                <div class="events-grid">
+                    <div class="event-card">
+                        <div>
+                            <div style="color: var(--gold); font-size: 0.9rem;">6th May | 10:00 AM</div>
+                            <div class="event-name">The Carnival</div>
+                            <div style="font-size: 0.85rem; color: #666;">📍 Lakshmi Vihar Phase-1, Hyderabad</div>
+                        </div>
+                        <a href="https://www.google.com/maps/place/Lakshmi+Vihar+Phase+1,+Serilingampalle+(M),+Telangana+500019,+India/@17.4789232,78.3043159,18z/data=!3m1!4b1!4m6!3m5!1s0x3bcb92c5a38518c7:0x15c581ab6b469bdf!8m2!3d17.4790544!4d78.3062288!16s%2Fg%2F1q6620cq_?entry=ttu&g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="maps-btn">View Maps</a>
+                    </div>
+                    <div class="event-card">
+                        <div>
+                            <div style="color: var(--gold); font-size: 0.9rem;">6th May | 5:00 PM</div>
+                            <div class="event-name">Engagement & Sangeet</div>
+                            <div style="font-size: 0.85rem; color: #666;">📍 Sri Convention Hall, Hyderabad</div>
+                        </div>
+                        <a href="https://www.google.com/maps/place/Sri+Convention+Hall/@17.5111449,78.2961623,17z/data=!4m17!1m10!3m9!1s0x3bcb8d66ab4e988f:0xda59fdc59515bdc4!2sSri+Convention+Hall!8m2!3d17.5111449!4d78.2961623!10e5!14m1!1BCgIgARICGAI!16s%2Fg%2F11h565rxxc!3m5!1s0x3bcb8d66ab4e988f:0xda59fdc59515bdc4!8m2!3d17.5111449!4d78.2961623!16s%2Fg%2F11h565rxxc!5m1!1e1!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDMxOC4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="maps-btn">View on Maps</a>
+                    </div>
+                    <div class="event-card">
+                        <div>
+                            <div style="color: var(--gold); font-size: 0.9rem;">7th May | 10:01 AM</div>
+                            <div class="event-name">The Wedding</div>
+                            <div style="font-size: 0.85rem; color: #666;">📍 Sri Convention Hall, Hyderabad</div>
+                        </div>
+                       <a href="https://www.google.com/maps/place/Sri+Convention+Hall/@17.5111449,78.2961623,17z/data=!4m17!1m10!3m9!1s0x3bcb8d66ab4e988f:0xda59fdc59515bdc4!2sSri+Convention+Hall!8m2!3d17.5111449!4d78.2961623!10e5!14m1!1BCgIgARICGAI!16s%2Fg%2F11h565rxxc!3m5!1s0x3bcb8d66ab4e988f:0xda59fdc59515bdc4!8m2!3d17.5111449!4d78.2961623!16s%2Fg%2F11h565rxxc!5m1!1e1!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDMxOC4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="maps-btn">View on Maps</a>
+                    </div>
+                    <div class="event-card">
+                        <div>
+                            <div style="color: var(--gold); font-size: 0.9rem;">9th May | 6:30 PM</div>
+                            <div class="event-name">The Reception</div>
+                            <div style="font-size: 0.85rem; color: #666;">📍 Sagar Lawns, Chhatrapati Sambhajinagar</div>
+                        </div>
+                        <a href="https://www.google.com/maps/place/Sagar+Lawns/@19.8737243,75.3689743,17z/data=!3m1!4b1!4m6!3m5!1s0x3bdba2f277ff99c7:0x8818ab1274f65ba9!8m2!3d19.8737243!4d75.3715546!16s%2Fg%2F1vxfymkd?entry=ttu&g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="maps-btn">View on Maps</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="content-wrap">
+                <h2 class="welcome-title">Counting down to the Celebration...</h2>
+                <div id="timer" style="display: flex; justify-content: center; gap: 15px;">
+                    <div style="background: white; padding: 20px 10px; border-radius: 12px; min-width: 80px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                        <span id="days" style="font-size: 2.2rem; color: var(--pastel-pink); font-family: var(--font-serif);">00</span><br><span style="font-size: 10px; text-transform: uppercase; color: var(--gold); font-weight: 600;">Days</span>
+                    </div>
+                    <div style="background: white; padding: 20px 10px; border-radius: 12px; min-width: 80px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                        <span id="hours" style="font-size: 2.2rem; color: var(--pastel-pink); font-family: var(--font-serif);">00</span><br><span style="font-size: 10px; text-transform: uppercase; color: var(--gold); font-weight: 600;">Hrs</span>
+                    </div>
+                    <div style="background: white; padding: 20px 10px; border-radius: 12px; min-width: 80px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                        <span id="minutes" style="font-size: 2.2rem; color: var(--pastel-pink); font-family: var(--font-serif);">00</span><br><span style="font-size: 10px; text-transform: uppercase; color: var(--gold); font-weight: 600;">Min</span>
+                    </div>
+                </div>
+                
+                <div class="baraat-slider-section">
+                    <div class="landmark-group bibi">
+                        <img src="./assets/temple.png" class="landmark" alt="Temple">
+                        <div class="city-label">Chhatrapati Sambhajinagar</div>
+                    </div>
+
+                    <div class="baraat-group">
+                        <img src="./assets/baraat.png" class="baraat-img" alt="Baraat">
+                        <div class="city-label">#TheArshiWedding</div>
+                    </div>
+
+                    <div class="landmark-group charminar">
+                        <img src="./assets/Charminar.png" class="landmark" alt="Charminar">
+                        <div class="city-label">Hyderabad</div>
+                    </div>
+                </div>
+
+                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Shivani+%26+Arpan&dates=20260506T100000Z/20260509T230000Z" target="_blank" class="calendar-btn">Add to Calendar</a>
+            </div>
+        </section>
+
+        <div class="full-width-banner">
+            <div class="banner-line">Shivani</div>
+            <div style="font-family: var(--font-serif); font-size: 1.5rem; margin: 5px 0; text-transform: lowercase; font-style: italic; opacity: 0.9;">weds</div>
+            <div class="banner-line">Arpan</div>
+            <div style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--rings-blend-cream); margin: 30px 0 5px 0; letter-spacing: 2px;">07 May 2026</div>
+            <div style="font-family: var(--font-sans); font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-bottom: 40px; letter-spacing: 3px;">#TheArshiWedding</div>
+            <div style="font-family: var(--font-garamond); font-size: 1.0rem; line-height: 1.8; max-width: 600px; padding: 0 20px; opacity: 0.95; margin: 0 auto;">We look forward to sharing this unforgettable moment with our most special people.</div>
+            <div style="font-family: var(--font-devanagari); font-size: 1.0rem; color: rgba(255,255,255,0.9); margin-top: 10px;">आप हमारे लिए बहुत खास हैं, और इस खुशी के मौके पर आपकी मौजूदगी का हमें इंतज़ार रहेगा।</div>
+        </div>
+
+    </div>
+
+    <script>
+        const audio = document.getElementById('wedding-audio');
+        const mantraVideo = document.getElementById('mantra-video');
+        let isPlaying = false;
+
+        /*
+        function typeMantra() {
+            const pathContent = document.getElementById('textPathContent');
+            const fullMantra = " ॐ गणेशाय नमः ॐ गणेशाय नमः ॐ गणेशाय नमः ॐ गणेशाय नमः ॐ गणेशाय नमः ";
+
+            pathContent.textContent = "";
+
+            const segmenter = new Intl.Segmenter("hi", { granularity: "grapheme" });
+            const parts = Array.from(segmenter.segment(fullMantra), s => s.segment);
+
+            let i = 0;
+
+            const interval = setInterval(() => {
+                pathContent.textContent += parts[i];
+                i++;
+
+                if (i >= parts.length) {
+                    clearInterval(interval);
+                }
+            }, 90);
+        }
+        */
+
+        function openLetter() {
+            document.getElementById('page-body').classList.add('is-open');
+            document.body.style.overflowY = "auto";
+
+            if (mantraVideo) {
+                mantraVideo.currentTime = 0;
+                mantraVideo.play().catch(() => {});
+            }
+
+            audio.play().then(() => { isPlaying = true; }).catch(e => {});
+        }
+
+        function toggleMusic() {
+            const btn = document.getElementById('music-control');
+            if (isPlaying) {
+                audio.pause();
+                btn.innerText = '🔇';
+            } else {
+                audio.play();
+                btn.innerText = '♪';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.7 },
+                        colors: ['#d8a7b1', '#c5a059', '#ffffff']
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        observer.observe(document.getElementById('names-section'));
+
+        const targetDate = new Date("May 06, 2026 10:00:00").getTime();
+        setInterval(function() {
+            const d = targetDate - new Date().getTime();
+            if (d > 0) {
+                document.getElementById("days").innerText = String(Math.floor(d / 86400000)).padStart(2, '0');
+                document.getElementById("hours").innerText = String(Math.floor((d % 86400000) / 3600000)).padStart(2, '0');
+                document.getElementById("minutes").innerText = String(Math.floor((d % 3600000) / 60000)).padStart(2, '0');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
